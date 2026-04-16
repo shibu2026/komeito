@@ -1,0 +1,690 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Google Sans',Roboto,sans-serif}
+.page{display:none}.page.active{display:block}
+.login-wrap{min-height:600px;background:#f0ebf8;display:flex;align-items:center;justify-content:center;padding:32px 16px}
+.login-card{background:white;border-radius:12px;padding:40px 36px;max-width:400px;width:100%;border-top:8px solid #7248b9}
+.login-logo{font-size:22px;font-weight:500;color:#7248b9;margin-bottom:6px}
+.login-sub{font-size:13px;color:#5f6368;margin-bottom:28px}
+.l-label{font-size:13px;color:#444;margin-bottom:6px;display:block}
+.l-inp{width:100%;padding:10px 14px;border:1px solid #dadce0;border-radius:6px;font-size:15px;outline:none;color:#202124}
+.l-inp:focus{border-color:#7248b9;box-shadow:0 0 0 2px #ede8fc}
+.l-btn{width:100%;background:#7248b9;color:white;border:none;padding:12px;font-size:15px;border-radius:6px;cursor:pointer;margin-top:20px}
+.l-btn:hover{background:#5c3a9a}
+.l-err{color:#d93025;font-size:13px;margin-top:10px;min-height:18px}
+.pw-hint{background:#f8f5ff;border:1px solid #ede8fc;border-radius:6px;padding:12px 14px;margin-top:16px;font-size:12px;color:#534AB7;line-height:1.8}
+.form-wrap{background:#f0ebf8;min-height:600px;padding:24px 0 48px}
+.f-header{background:white;border-radius:8px;margin:0 auto 12px;max-width:640px;overflow:hidden;border-top:10px solid #7248b9}
+.f-header-inner{padding:24px}
+.f-title{font-size:24px;font-weight:400;color:#202124;margin-bottom:8px}
+.f-req-note{font-size:13px;color:#d93025}
+.f-sec{background:white;border-radius:8px;margin:0 auto 12px;max-width:640px;padding:24px}
+.qt{font-size:15px;color:#202124;margin-bottom:12px;line-height:1.5}
+.req{color:#d93025;margin-left:3px}
+.sel{width:100%;padding:10px 12px;border:none;border-bottom:1px solid #999;font-size:15px;color:#202124;background:transparent;outline:none;cursor:pointer}
+.sel:focus{border-bottom:2px solid #7248b9}
+.inp{width:100%;padding:6px 0;border:none;border-bottom:1px solid #999;font-size:15px;color:#202124;background:transparent;outline:none}
+.inp:focus{border-bottom:2px solid #7248b9}
+.txta{width:100%;padding:8px 0;border:none;border-bottom:1px solid #999;font-size:15px;color:#202124;background:transparent;outline:none;resize:vertical;min-height:120px;line-height:1.6}
+.txta:focus{border-bottom:2px solid #7248b9}
+.rg{display:flex;flex-direction:column;gap:12px}
+.ri{display:flex;align-items:center;gap:12px;font-size:15px;color:#202124;cursor:pointer}
+.ri input{accent-color:#7248b9;width:18px;height:18px}
+.dlbl{font-size:12px;color:#444;margin-bottom:4px}
+.dgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.btn-row{max-width:640px;margin:0 auto;padding:0 0 12px;display:flex;gap:12px;flex-wrap:wrap}
+.sbtn{background:#7248b9;color:white;border:none;padding:12px 28px;font-size:15px;border-radius:4px;cursor:pointer}
+.sbtn:hover{background:#5c3a9a}
+.obtn{background:white;color:#5f6368;border:1px solid #dadce0;padding:11px 20px;font-size:15px;border-radius:4px;cursor:pointer}
+.obtn:hover{background:#f8f8f8}
+.hidden{display:none}
+.toast{margin:8px auto 0;max-width:640px;background:#323232;color:white;padding:12px 20px;border-radius:6px;font-size:14px;text-align:center;display:none}
+.f-footer{max-width:640px;margin:0 auto;text-align:center;font-size:12px;color:#70757a;padding-top:8px}
+.member-list{display:flex;flex-direction:column;gap:8px;margin-top:4px}
+.member-radio{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:6px;border:1px solid #e8e0f8;cursor:pointer;font-size:14px;color:#202124}
+.member-radio:hover{background:#f8f5ff}
+.member-radio.selected{background:#ede8fc;border-color:#7248b9}
+.member-radio input{accent-color:#7248b9;width:16px;height:16px;flex-shrink:0}
+.member-name{font-weight:500}
+.member-kana{font-size:12px;color:#5f6368;margin-left:4px}
+.adm-wrap{background:#f8f9fa;min-height:600px;padding-bottom:48px}
+.adm-bar{background:#7248b9;color:white;display:flex;align-items:stretch}
+.adm-bar-title{font-size:15px;font-weight:500;padding:14px 20px;flex:1;align-self:center}
+.adm-tabs{display:flex;align-items:stretch}
+.adm-tab{background:transparent;color:rgba(255,255,255,0.75);border:none;padding:14px 16px;font-size:13px;cursor:pointer;border-bottom:3px solid transparent;white-space:nowrap}
+.adm-tab:hover{color:white;background:rgba(255,255,255,0.1)}
+.adm-tab.active{color:white;border-bottom:3px solid white;font-weight:500}
+.adm-logout{background:rgba(255,255,255,0.15);color:white;border:none;padding:8px 14px;border-radius:4px;font-size:13px;cursor:pointer;margin:10px 16px 10px 0;align-self:center;white-space:nowrap}
+.adm-logout:hover{background:rgba(255,255,255,0.3)}
+.tab-content{display:none}.tab-content.active{display:block}
+.adm-body{max-width:980px;margin:0 auto;padding:24px 16px}
+.adm-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:20px}
+.sc{background:white;border-radius:8px;padding:16px;text-align:center;border:0.5px solid #e0e0e0}
+.sc-num{font-size:28px;font-weight:500;color:#7248b9}
+.sc-lbl{font-size:12px;color:#5f6368;margin-top:4px}
+.adm-card{background:white;border-radius:8px;padding:20px;border:0.5px solid #e0e0e0;margin-bottom:16px}
+.adm-card-title{font-size:15px;font-weight:500;color:#202124;margin-bottom:16px}
+.filter-row{display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+.fsel{padding:6px 10px;border:1px solid #dadce0;border-radius:4px;font-size:13px;color:#202124;background:white;cursor:pointer;outline:none}
+.xbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:14px}
+.xbtn{background:white;color:#217346;border:1.5px solid #217346;padding:9px 18px;font-size:14px;border-radius:4px;cursor:pointer;display:flex;align-items:center;gap:6px}
+.xbtn:hover{background:#f0f8f3}
+.sel-cnt{font-size:13px;color:#5f6368}
+.atbl{width:100%;border-collapse:collapse;font-size:13px}
+.atbl th{background:#f3f0fc;color:#534AB7;padding:8px 10px;text-align:left;font-weight:500;border-bottom:1px solid #e0e0e0;white-space:nowrap}
+.atbl td{padding:8px 10px;border-bottom:0.5px solid #f0f0f0;color:#202124;vertical-align:top}
+.atbl tr:last-child td{border-bottom:none}
+.atbl tr:hover td{background:#fafafa}
+.del-btn{background:none;border:none;color:#d93025;font-size:12px;cursor:pointer;padding:2px 4px}
+.del-btn:hover{text-decoration:underline}
+.empty{text-align:center;color:#9e9e9e;padding:32px;font-size:14px}
+.edit-field{display:flex;flex-direction:column;gap:5px;margin-bottom:14px}
+.edit-lbl{font-size:11px;font-weight:500;color:#888;letter-spacing:0.04em;text-transform:uppercase}
+.edit-inp{width:100%;padding:8px 10px;border:1px solid #dadce0;border-radius:6px;font-size:14px;color:#202124;outline:none}
+.edit-inp:focus{border-color:#7248b9;box-shadow:0 0 0 2px #ede8fc}
+.edit-inp:disabled{background:#f5f5f5;color:#999}
+.q-row{display:flex;align-items:center;gap:8px;padding:9px 12px;border:1px solid #e8e0f8;border-radius:8px;background:#faf8ff;margin-bottom:8px;flex-wrap:wrap}
+.q-row-num{font-size:13px;color:#534AB7;font-weight:500;width:20px;flex-shrink:0}
+.q-row-inp{padding:6px 9px;border:1px solid #dadce0;border-radius:5px;font-size:13px;color:#202124;outline:none;flex:1;min-width:120px}
+.q-row-inp:focus{border-color:#7248b9}
+.req-toggle{display:flex;align-items:center;gap:5px;font-size:12px;color:#5f6368;cursor:pointer;white-space:nowrap;flex-shrink:0}
+.req-toggle input{accent-color:#7248b9;width:14px;height:14px;cursor:pointer}
+.badge-req{font-size:11px;padding:2px 7px;border-radius:10px;background:#fde8e8;color:#c62828;font-weight:500;white-space:nowrap}
+.badge-opt{font-size:11px;padding:2px 7px;border-radius:10px;background:#f0f0f0;color:#888;font-weight:500;white-space:nowrap}
+.opt-list{display:flex;flex-direction:column;gap:8px}
+.opt-row{display:flex;align-items:center;gap:8px}
+.opt-inp{flex:1;padding:7px 10px;border:1px solid #dadce0;border-radius:6px;font-size:14px;color:#202124;outline:none}
+.opt-inp:focus{border-color:#7248b9;box-shadow:0 0 0 2px #ede8fc}
+.opt-del{background:none;border:none;color:#bbb;font-size:18px;cursor:pointer;line-height:1;padding:0 4px;flex-shrink:0}
+.opt-del:hover{color:#d93025}
+.opt-add-btn{display:flex;align-items:center;gap:6px;background:none;border:1px dashed #b0a0e0;color:#7248b9;padding:7px 14px;border-radius:6px;font-size:13px;cursor:pointer;margin-top:4px}
+.opt-add-btn:hover{background:#f8f5ff}
+.opt-fixed{font-size:13px;color:#888;padding:7px 10px;background:#f5f5f5;border-radius:6px;border:1px solid #e0e0e0;margin-top:4px}
+.divider{border:none;border-top:1px solid #f0f0f0;margin:20px 0}
+.save-bar{display:flex;gap:10px}
+.save-btn{background:#7248b9;color:white;border:none;padding:10px 24px;font-size:14px;border-radius:6px;cursor:pointer}
+.save-btn:hover{background:#5c3a9a}
+.reset-btn{background:white;color:#5f6368;border:1px solid #dadce0;padding:10px 20px;font-size:14px;border-radius:6px;cursor:pointer}
+.reset-btn:hover{background:#f8f8f8}
+.preview-bg{background:#f0ebf8;border-radius:8px;padding:16px}
+.prev-header{background:white;border-radius:6px;border-top:6px solid #7248b9;padding:14px 16px;margin-bottom:8px}
+.prev-sec{background:white;border-radius:6px;padding:10px 14px;margin-bottom:6px;border-left:3px solid #ede8fc}
+.prev-qt{font-size:13px;color:#202124;font-weight:500;margin-bottom:4px}
+.prev-opts{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.prev-opt{font-size:11px;background:#f3f0fc;color:#534AB7;padding:3px 8px;border-radius:10px}
+.prev-note{font-size:11px;color:#9e9e9e}
+.adm-toast{margin:12px 0 0;background:#323232;color:white;padding:12px 20px;border-radius:6px;font-size:14px;text-align:center;display:none}
+.godo-note{font-size:13px;color:#7248b9;background:#f3f0fc;border-radius:6px;padding:8px 12px;margin-top:10px}
+</style>
+
+<!-- LOGIN -->
+<div id="pg-login" class="page active">
+  <div class="login-wrap">
+    <div class="login-card">
+      <div class="login-logo">支部会開催報告</div>
+      <div class="login-sub">2026年度 入力システム</div>
+      <label class="l-label">パスワード</label>
+      <input class="l-inp" type="password" id="pw-inp" placeholder="パスワードを入力してください" onkeydown="if(event.key==='Enter')doLogin()">
+      <div class="l-err" id="pw-err"></div>
+      <button class="l-btn" onclick="doLogin()">ログイン</button>
+      <div class="pw-hint">ご入力いただくパスワードは担当者よりお知らせします。<br><span style="color:#888;font-size:11px">※デモ用　入力者：<strong>1117</strong>　管理者：<strong>admin2026</strong></span></div>
+    </div>
+  </div>
+</div>
+
+<!-- FORM -->
+<div id="pg-form" class="page">
+  <div class="form-wrap">
+    <div class="f-header">
+      <div class="f-header-inner">
+        <div class="f-title" id="disp-form-title"></div>
+        <div class="f-req-note" id="disp-req-note"></div>
+      </div>
+    </div>
+
+    <!-- Q1: 議会・氏名 -->
+    <div class="f-sec">
+      <div class="qt" id="disp-q1"></div>
+      <div style="margin-bottom:16px">
+        <div class="dlbl">議会名を選択してください</div>
+        <select class="sel" id="gikai" onchange="updateMembers()"><option value="">選択してください</option></select>
+      </div>
+      <div id="member-wrap" class="hidden">
+        <div class="dlbl" style="margin-bottom:8px">氏名を選択してください</div>
+        <div class="member-list" id="member-list"></div>
+      </div>
+    </div>
+
+    <!-- Q2: 総支部・開催単位 -->
+    <div class="f-sec">
+      <div class="qt" id="disp-q2"></div>
+      <div style="margin-bottom:16px">
+        <div class="dlbl">総支部を選択してください</div>
+        <select class="sel" id="soushi" onchange="updateShibu()">
+          <option value="">選択してください</option>
+          <option>東神戸</option><option>中央神戸</option><option>西神戸</option><option>明石</option>
+          <option>尼崎</option><option>西宮</option><option>東兵庫</option><option>播磨</option>
+          <option>姫路</option><option>北兵庫</option>
+        </select>
+      </div>
+      <div id="shibu-wrap" class="hidden">
+        <div class="dlbl" style="margin-bottom:6px">開催単位を選択してください</div>
+        <select class="sel" id="shibu" onchange="onShibuChange()">
+          <option value="">選択してください</option>
+        </select>
+        <div id="godo-wrap" class="hidden">
+          <div class="godo-note" style="margin-top:12px">合同開催の内容を入力してください</div>
+          <input class="inp" id="godo-text" type="text" placeholder="例：東灘・灘合同" style="margin-top:8px">
+        </div>
+      </div>
+    </div>
+
+    <!-- Q3: 開催日時 -->
+    <div class="f-sec">
+      <div class="qt" id="disp-q3"></div>
+      <div class="dgrid">
+        <div><div class="dlbl">月</div>
+          <select class="sel" id="month" onchange="buildDays()">
+            <option value="">月</option>
+            <option>4</option><option>5</option><option>6</option><option>7</option>
+            <option>8</option><option>9</option><option>10</option><option>11</option>
+            <option>12</option><option>1</option><option>2</option><option>3</option>
+          </select>
+        </div>
+        <div><div class="dlbl">日</div>
+          <select class="sel" id="day" onchange="showDow()"><option value="">日</option></select>
+        </div>
+      </div>
+      <div id="dow-disp" style="font-size:15px;color:#202124;margin-top:14px;min-height:22px"></div>
+    </div>
+
+    <!-- Q4: 国会担当 -->
+    <div class="f-sec">
+      <div class="qt" id="disp-q4"></div>
+      <div class="rg" id="kokkai-rg"></div>
+      <div id="other-wrap" class="hidden" style="margin-top:8px">
+        <input class="inp" id="other-name" type="text" placeholder="氏名を入力してください" style="margin-left:30px;width:calc(100% - 30px)">
+      </div>
+    </div>
+
+    <!-- Q5-7: 参加者数 -->
+    <div class="f-sec">
+      <div class="qt" id="disp-q5" style="margin-bottom:20px"></div>
+      <input class="inp" id="sonen" type="text" placeholder="人数を入力">
+      <div class="qt" id="disp-q6" style="margin-top:28px;margin-bottom:20px"></div>
+      <input class="inp" id="josi" type="text" placeholder="人数を入力">
+      <div class="qt" id="disp-q7" style="margin-top:28px;margin-bottom:20px"></div>
+      <input class="inp" id="seinen" type="text" placeholder="人数を入力">
+    </div>
+
+    <!-- Q8: 自由記述 -->
+    <div class="f-sec">
+      <div class="qt" id="disp-q8"></div>
+      <textarea class="txta" id="freeText" placeholder="自由にご記入ください"></textarea>
+    </div>
+
+    <div class="btn-row">
+      <button class="sbtn" onclick="submitForm()">送信</button>
+      <button class="obtn" onclick="logout()">ログアウト</button>
+    </div>
+    <div class="toast" id="f-toast"></div>
+    <div class="f-footer">入力内容はセッション中保存されます。</div>
+  </div>
+</div>
+
+<!-- ADMIN -->
+<div id="pg-admin" class="page">
+  <div class="adm-wrap">
+    <div class="adm-bar">
+      <div class="adm-bar-title">管理者画面 — 支部会開催報告 2026年度</div>
+      <div class="adm-tabs">
+        <button class="adm-tab active" onclick="switchTab('tab-answers',this)">回答管理</button>
+        <button class="adm-tab" onclick="switchTab('tab-edit',this)">フォーム編集</button>
+      </div>
+      <button class="adm-logout" onclick="logout()">ログアウト</button>
+    </div>
+    <div class="adm-body">
+
+      <div id="tab-answers" class="tab-content active">
+        <div class="adm-stats" id="adm-stats"></div>
+        <div class="adm-card">
+          <div class="adm-card-title">回答一覧</div>
+          <div class="filter-row">
+            <select class="fsel" id="f-gikai" onchange="renderTable()"><option value="">議会名 すべて</option></select>
+            <select class="fsel" id="f-soushi" onchange="renderTable()">
+              <option value="">総支部 すべて</option>
+              <option>東神戸</option><option>中央神戸</option><option>西神戸</option><option>明石</option>
+              <option>尼崎</option><option>西宮</option><option>東兵庫</option><option>播磨</option>
+              <option>姫路</option><option>北兵庫</option>
+            </select>
+            <select class="fsel" id="f-kokkai" onchange="renderTable()"><option value="">国会担当 すべて</option></select>
+          </div>
+          <div class="xbar">
+            <button class="xbtn" onclick="exportSelected()">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#217346" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+              選択した回答をExcel出力
+            </button>
+            <button class="xbtn" onclick="exportAll()">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#217346" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+              全件Excel出力
+            </button>
+            <span class="sel-cnt" id="sel-cnt"></span>
+          </div>
+          <div id="tbl-wrap"></div>
+        </div>
+      </div>
+
+      <div id="tab-edit" class="tab-content">
+        <div class="adm-card">
+          <div class="adm-card-title">フォームタイトル</div>
+          <div class="edit-field">
+            <span class="edit-lbl">タイトル文</span>
+            <input class="edit-inp" id="ed-title" type="text">
+          </div>
+        </div>
+        <div class="adm-card">
+          <div class="adm-card-title">各質問の見出しと必須設定</div>
+          <div style="font-size:12px;color:#888;margin-bottom:14px">①と③は常に必須です。</div>
+          <div id="q-rows-wrap"></div>
+        </div>
+        <div class="adm-card">
+          <div class="adm-card-title">④ 国会担当の選択肢</div>
+          <div style="font-size:12px;color:#888;margin-bottom:14px">「その他（自由記述）」と「なし」は固定です。</div>
+          <div class="opt-list" id="kokkai-opts-edit"></div>
+          <button class="opt-add-btn" onclick="addKokkaiOpt()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#7248b9" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            選択肢を追加
+          </button>
+          <div style="margin-top:10px;display:flex;flex-direction:column;gap:6px">
+            <div class="opt-fixed">その他（自由記述）　※固定</div>
+            <div class="opt-fixed">なし　※固定</div>
+          </div>
+        </div>
+        <div class="adm-card">
+          <div class="save-bar">
+            <button class="save-btn" onclick="applyEdits()">変更を保存してフォームに反映</button>
+            <button class="reset-btn" onclick="resetEdits()">初期値に戻す</button>
+          </div>
+          <div class="adm-toast" id="edit-toast"></div>
+        </div>
+        <div class="adm-card">
+          <div class="adm-card-title">プレビュー</div>
+          <div class="preview-bg">
+            <div class="prev-header">
+              <div style="font-size:18px;font-weight:400;color:#202124" id="prev-title"></div>
+              <div style="font-size:12px;color:#d93025;margin-top:6px" id="prev-req-note"></div>
+            </div>
+            <div id="prev-questions"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="toast" id="adm-toast"></div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<script>
+const PASS_USER="1117", PASS_ADMIN="admin2026";
+const DOW=["日","月","火","水","木","金","土"];
+
+const SOUSHI_SHIBU={
+  "東神戸":["東灘","灘","中央"],
+  "中央神戸":["兵庫","長田","北","北神戸"],
+  "西神戸":["須磨","東垂水","西垂水","西","西神"],
+  "明石":["明石東","明石","明石中央東","明石中央西","明石魚住","明石西","洲本東","洲本西","淡路西","淡路南","南あわじ"],
+  "尼崎":["尼崎中央","尼崎大庄","尼崎小田","尼崎武庫","尼崎立花南","尼崎難波","尼崎立花","尼崎園田","尼崎小田北","尼崎西園田"],
+  "西宮":["西宮","浜脇","西宮北","越水","北芦屋","中芦屋","南芦屋","浜甲子園","鳴尾","甲東・瓦木","上甲子園"],
+  "東兵庫":["伊丹東","伊丹","伊丹南","伊丹中央","伊丹北","伊丹西","川西中央","川西西","川西南","川西東","川西北","猪名川北","猪名川南","宝塚第１","宝塚第２","宝塚第３","宝塚第４","三田南","三田中","三田北"],
+  "播磨":["加古川西","加古川北","加古川平岡","加古川東","加古川中央","加古川南","高砂","西高砂","北高砂","稲美","播磨町南","播磨町北","小野西","小野東","三木北","三木西","加西","加東","西脇","多可"],
+  "姫路":["城北","姫路","福崎","市川","神河","しらさぎ","姫路西","飾磨西","網干","飾磨","広畑","相生","赤穂","たつの","たつの南","上郡","太子","佐用","宍粟"],
+  "北兵庫":["豊岡南","豊岡北","朝来","養父","美方","丹波篠山東","丹波篠山西","丹波第１","丹波第２"]
+};
+
+const DEFAULTS={
+  title:"2026年度 支部会開催報告の入力フォーム",
+  qs:[
+    {key:"q1",label:"①議会名・氏名",req:true,fixed:true,note:"議会名 → 氏名 選択"},
+    {key:"q2",label:"②総支部・開催単位（支部など）",req:false,fixed:false,note:"総支部 → 支部/合同開催 選択"},
+    {key:"q3",label:"③開催日時・曜日",req:true,fixed:true,note:"月・日 選択 → 曜日自動表示"},
+    {key:"q4",label:"④国会担当の有無",req:false,fixed:false,note:"ラジオボタン選択"},
+    {key:"q5",label:"⑤【壮年】参加者の人数",req:false,fixed:false,note:"短文テキスト入力"},
+    {key:"q6",label:"⑥【女性】参加者の人数",req:false,fixed:false,note:"短文テキスト入力"},
+    {key:"q7",label:"⑦【青年】参加者の人数",req:false,fixed:false,note:"短文テキスト入力"},
+    {key:"q8",label:"⑧自由記述",req:false,fixed:false,note:"長文テキスト入力"},
+  ],
+  kokkaiOpts:["伊藤県代表","高橋県副代表"]
+};
+
+let cfg=JSON.parse(JSON.stringify(DEFAULTS));
+let submissions=[];
+
+const GIKAI_DATA=[
+  {g:"参議院",members:[{n:"伊藤 孝江",k:"いとう たかえ"},{n:"高橋 光男",k:"たかはし みつお"}]},
+  {g:"兵庫県議会",members:[{n:"岸本 一尚",k:"きしもと かずなお"},{n:"谷井 勲",k:"たにい いさお"},{n:"伊藤 勝正",k:"いとう かつまさ"},{n:"越田 浩矢",k:"こしだ ひろや"},{n:"島山 清史",k:"しまやま きよふみ"},{n:"天野 文夫",k:"あまの ふみお"},{n:"竹尾 智枝",k:"たけお ともえ"},{n:"小泉 弘喜",k:"こいずみ ひろき"},{n:"菅 雄史",k:"すが たけし"},{n:"大塚 公彦",k:"おおつか きみひこ"},{n:"松尾 智美",k:"まつお ともみ"},{n:"里見 孝枝",k:"さとみ たかえ"},{n:"麻田 寿美",k:"あさだ ひさみ"}]},
+  {g:"神戸市議会",members:[{n:"岩佐 健矢",k:"いわさ けんや"},{n:"髙瀬 勝也",k:"たかせ かつや"},{n:"菅野 吉記",k:"すがの よしのり"},{n:"坂口 有希子",k:"さかぐち あきこ"},{n:"門田 まゆみ",k:"かどた まゆみ"},{n:"壬生 潤",k:"みぶ じゅん"},{n:"細谷 典功",k:"ほそや のりよし"},{n:"堂下 豊史",k:"どうした とよじ"},{n:"徳山 敏子",k:"とくやま としこ"},{n:"萩原 泰三",k:"はぎわら たいぞう"},{n:"吉田 謙治",k:"よしだ けんじ"},{n:"宮田 公子",k:"みやた きみこ"}]},
+  {g:"姫路市議会",members:[{n:"宮下 和也",k:"みやした かずや"},{n:"西本 眞造",k:"にしもと しんぞう"},{n:"有馬 剛朗",k:"ありま たけろう"},{n:"川島 淳良",k:"かわしま あつよし"},{n:"白井 義一",k:"しらい ぎいち"},{n:"中西 祥子",k:"なかにし よしこ"},{n:"前川 藤枝",k:"まえかわ ふじえ"},{n:"阿野 れい子",k:"あの れいこ"}]},
+  {g:"尼崎市議会",members:[{n:"真鍋 修司",k:"まなべ しゅうじ"},{n:"福島 覚",k:"ふくしま さとり"},{n:"眞田 泰秀",k:"さなだ やすひで"},{n:"土岐 良二",k:"どき りょうじ"},{n:"蛭子 秀一",k:"えびす ひでいち"},{n:"東浦 小夜子",k:"とうら さよこ"},{n:"藤野 勝利",k:"ふじの かつとし"},{n:"中尾 健一",k:"なかお けんいち"},{n:"中村 敦子",k:"なかむら あつこ"},{n:"田中 俊幸",k:"たなか としゆき"},{n:"永藤 正明",k:"ながふじ まさあき"},{n:"上田 沙緒里",k:"うえだ さおり"}]},
+  {g:"明石市議会",members:[{n:"梅田 宏希",k:"うめだ こうき"},{n:"国出 拓志",k:"くにで ひろし"},{n:"尾倉 あき子",k:"おぐら あきこ"},{n:"飯田 伸子",k:"いいだ のぶこ"},{n:"長尾 博子",k:"ながお ひろこ"},{n:"河村 和歌子",k:"かわむら わかこ"}]},
+  {g:"西宮市議会",members:[{n:"大川原 成彦",k:"おおかわら なるひこ"},{n:"山田 増人",k:"やまだ ますと"},{n:"大原 智",k:"おおはら さとし"},{n:"松山 勝則",k:"まつやま かつのり"},{n:"松田 茂",k:"まつだ しげる"},{n:"山口 真由美",k:"やまぐち まゆみ"},{n:"重久 大学",k:"しげひさ だいがく"}]},
+  {g:"洲本市議会",members:[{n:"先田 正一",k:"さきた しょういち"},{n:"原田 ひとみ",k:"はらだ ひとみ"}]},
+  {g:"芦屋市議会",members:[{n:"帰山 和也",k:"きやま かずや"},{n:"田原 俊彦",k:"たはら としひこ"},{n:"西村 真人",k:"にしむら まさと"}]},
+  {g:"伊丹市議会",members:[{n:"北原 速男",k:"きたはら はやお"},{n:"篠原 光宏",k:"しのはら みつひろ"},{n:"竹村 和人",k:"たけむら かずと"},{n:"永松 敏彦",k:"ながまつ としひこ"},{n:"松浦 晴美",k:"まつうら はるみ"},{n:"前田 伸一郎",k:"まえだ しんいちろう"}]},
+  {g:"相生市議会",members:[{n:"後田 正信",k:"うしろだ まさのぶ"},{n:"宮城 邦子",k:"みやしろ くにこ"}]},
+  {g:"豊岡市議会",members:[{n:"竹中 理",k:"たけなか さとる"},{n:"辻 至誠",k:"つじ よしのぶ"}]},
+  {g:"加古川市議会",members:[{n:"相良 大悟",k:"さがら だいご"},{n:"小林 直樹",k:"こばやし なおき"},{n:"白石 信一",k:"しらいし しんいち"},{n:"桃井 祥子",k:"ももい しょうこ"},{n:"岡田 妙子",k:"おかだ たえこ"},{n:"山﨑 兼次",k:"やまさき けんじ"}]},
+  {g:"赤穂市議会",members:[{n:"前川 弘文",k:"まえかわ ひろふみ"},{n:"南條 千鶴子",k:"なんじょう ちづこ"}]},
+  {g:"西脇市議会",members:[{n:"藤原 哲也",k:"ふじわら てつや"}]},
+  {g:"宝塚市議会",members:[{n:"藤岡 和枝",k:"ふじおか かずえ"},{n:"三宅 浩二",k:"みやけ こうじ"},{n:"中野 正",k:"なかの ただし"},{n:"坂本 篤史",k:"さかもと あつし"}]},
+  {g:"三木市議会",members:[{n:"内藤 博史",k:"ないとう ひろふみ"},{n:"松原 久美子",k:"まつばら くみこ"}]},
+  {g:"高砂市議会",members:[{n:"森 秀樹",k:"もり ひでき"},{n:"迫川 高行",k:"さこがわ たかゆき"},{n:"春増 勝利",k:"はるまし かつとし"}]},
+  {g:"川西市議会",members:[{n:"大矢根 秀明",k:"おおやね ひであき"},{n:"平岡 譲",k:"ひらおか ゆずる"},{n:"大﨑 淳正",k:"おおさき あつまさ"},{n:"山﨑 孝弘",k:"やまざき たかひろ"},{n:"榮 奈津子",k:"さかえ なつこ"}]},
+  {g:"小野市議会",members:[{n:"川名 善三",k:"かわな よしぞう"},{n:"村本 洋子",k:"むらもと ようこ"}]},
+  {g:"三田市議会",members:[{n:"大西 雅子",k:"おおにし まさこ"},{n:"福田 佳則",k:"ふくだ よしのり"},{n:"村手 秀樹",k:"むらて ひでき"}]},
+  {g:"加西市議会",members:[{n:"土本 昌幸",k:"つちもと まさゆき"}]},
+  {g:"丹波篠山市議会",members:[{n:"隅田 雅春",k:"すみだ まさはる"},{n:"岡 圭子",k:"おか けいこ"}]},
+  {g:"養父市議会",members:[{n:"川瀬 稔",k:"かわせ みのる"}]},
+  {g:"丹波市議会",members:[{n:"須原 弥生",k:"すはら やよい"},{n:"十倉 浩",k:"とくら ひろし"}]},
+  {g:"南あわじ市議会",members:[{n:"熊田 司",k:"くまだ つかさ"}]},
+  {g:"朝来市議会",members:[{n:"上田 幸広",k:"うえだ ゆきひろ"}]},
+  {g:"淡路市議会",members:[{n:"土井 晴夫",k:"どい はるお"},{n:"西村 秀一",k:"にしむら ひでかず"}]},
+  {g:"宍粟市議会",members:[{n:"八木 雄治",k:"やぎ ゆうじ"},{n:"田村 純司",k:"たむら じゅんじ"}]},
+  {g:"加東市議会",members:[{n:"長谷川 幹雄",k:"はせがわ みきお"}]},
+  {g:"たつの市議会",members:[{n:"畑山 剛一",k:"はたやま たかかず"},{n:"名村 嘉洋",k:"なむら よしひろ"}]},
+  {g:"猪名川町議会",members:[{n:"阪本 ひろ子",k:"さかもと ひろこ"},{n:"中井 智子",k:"なかい ともこ"}]},
+  {g:"多可町議会",members:[{n:"藤本 一昭",k:"ふじもと かずあき"}]},
+  {g:"稲美町議会",members:[{n:"山口 守",k:"やまぐち まもる"}]},
+  {g:"播磨町議会",members:[{n:"木村 晴恵",k:"きむら はるえ"},{n:"大瀧 金三",k:"おおたき きんぞう"}]},
+  {g:"市川町議会",members:[{n:"中岡 輝昭",k:"なかおか てるあき"}]},
+  {g:"福崎町議会",members:[{n:"大住 文子",k:"おおすみ ふみこ"}]},
+  {g:"神河町議会",members:[{n:"小島 義次",k:"こじま よしつぐ"}]},
+  {g:"太子町議会",members:[{n:"中島 貞次",k:"なかしま ていじ"},{n:"山本 順久",k:"やまもと よりひさ"}]},
+  {g:"上郡町議会",members:[{n:"田渕 千洋",k:"たぶち ちひろ"}]},
+  {g:"佐用町議会",members:[{n:"大内 将広",k:"おおうち まさひろ"}]},
+  {g:"香美町議会",members:[{n:"山根 典明",k:"やまね のりあき"}]},
+  {g:"新温泉町議会",members:[{n:"寺谷 英一",k:"てらたに えいいち"}]}
+];
+
+function init(){
+  const gSel=document.getElementById('gikai'),fSel=document.getElementById('f-gikai');
+  GIKAI_DATA.forEach(d=>{[gSel,fSel].forEach(s=>{const o=document.createElement('option');o.value=d.g;o.textContent=d.g;s.appendChild(o);});});
+  applyConfig();
+}
+
+function showPage(id){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.getElementById(id).classList.add('active');}
+function logout(){showPage('pg-login');document.getElementById('pw-inp').value='';}
+function doLogin(){
+  const pw=document.getElementById('pw-inp').value.trim(),err=document.getElementById('pw-err');
+  if(pw===PASS_ADMIN){err.textContent='';renderAdmin();buildEditUI();showPage('pg-admin');}
+  else if(pw===PASS_USER){err.textContent='';showPage('pg-form');}
+  else err.textContent='パスワードが正しくありません。';
+}
+function switchTab(id,btn){
+  document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.adm-tab').forEach(b=>b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');btn.classList.add('active');
+}
+
+function applyConfig(){
+  document.getElementById('disp-form-title').textContent=cfg.title;
+  const hasReq=cfg.qs.some(q=>q.req);
+  document.getElementById('disp-req-note').textContent=hasReq?'* は必須項目です':'';
+  cfg.qs.forEach(q=>{const el=document.getElementById('disp-'+q.key);if(el)el.innerHTML=q.req?q.label+'<span class="req">*</span>':q.label;});
+  buildKokkaiForm();
+  updatePreview();
+}
+
+function updateShibu(){
+  const s=document.getElementById('soushi').value;
+  const shibuSel=document.getElementById('shibu');
+  const shibuWrap=document.getElementById('shibu-wrap');
+  const godoWrap=document.getElementById('godo-wrap');
+  shibuSel.innerHTML='<option value="">選択してください</option>';
+  godoWrap.classList.add('hidden');
+  document.getElementById('godo-text').value='';
+  if(!s){shibuWrap.classList.add('hidden');return;}
+  const shibus=SOUSHI_SHIBU[s]||[];
+  shibus.forEach(sb=>{const o=document.createElement('option');o.value=sb;o.textContent=sb;shibuSel.appendChild(o);});
+  const godo=document.createElement('option');godo.value='合同開催';godo.textContent='合同開催';shibuSel.appendChild(godo);
+  shibuWrap.classList.remove('hidden');
+}
+
+function onShibuChange(){
+  const v=document.getElementById('shibu').value;
+  const godoWrap=document.getElementById('godo-wrap');
+  if(v==='合同開催'){godoWrap.classList.remove('hidden');}
+  else{godoWrap.classList.add('hidden');document.getElementById('godo-text').value='';}
+}
+
+function getShibuValue(){
+  const shibu=document.getElementById('shibu').value;
+  if(shibu==='合同開催'){return '合同開催：'+document.getElementById('godo-text').value;}
+  return shibu;
+}
+
+function buildKokkaiForm(){
+  const rg=document.getElementById('kokkai-rg');
+  rg.innerHTML='';
+  cfg.kokkaiOpts.forEach(opt=>{
+    const lbl=document.createElement('label');lbl.className='ri';
+    lbl.innerHTML=`<input type="radio" name="kokkai" value="${opt}" onchange="toggleOther()">${opt}`;
+    rg.appendChild(lbl);
+  });
+  const lO=document.createElement('label');lO.className='ri';
+  lO.innerHTML=`<input type="radio" name="kokkai" value="その他" onchange="toggleOther()">その他`;
+  rg.appendChild(lO);
+  const lN=document.createElement('label');lN.className='ri';
+  lN.innerHTML=`<input type="radio" name="kokkai" value="なし" onchange="toggleOther()">なし`;
+  rg.appendChild(lN);
+  const fk=document.getElementById('f-kokkai');
+  if(fk){
+    fk.innerHTML='<option value="">国会担当 すべて</option>';
+    cfg.kokkaiOpts.forEach(opt=>{const o=document.createElement('option');o.value=opt;o.textContent=opt;fk.appendChild(o);});
+    ['その他','なし'].forEach(v=>{const o=document.createElement('option');o.value=v;o.textContent=v;fk.appendChild(o);});
+  }
+}
+
+function buildEditUI(){
+  document.getElementById('ed-title').value=cfg.title;
+  const wrap=document.getElementById('q-rows-wrap');wrap.innerHTML='';
+  cfg.qs.forEach(q=>{
+    const row=document.createElement('div');row.className='q-row';
+    const fn=q.fixed?'<span style="font-size:11px;color:#bbb;margin-left:4px">（常に必須）</span>':'';
+    row.innerHTML=`<span class="q-row-num">${q.label.substring(0,1)}</span>
+      <input class="q-row-inp" id="ed-${q.key}" type="text" value="${q.label}">
+      <label class="req-toggle"><input type="checkbox" id="req-${q.key}" ${q.req?'checked':''} ${q.fixed?'disabled':''} onchange="toggleReqBadge('${q.key}',this.checked)">必須</label>
+      <span class="badge-${q.req?'req':'opt'}" id="badge-${q.key}">${q.req?'必須':'任意'}</span>${fn}`;
+    wrap.appendChild(row);
+  });
+  buildKokkaiOptEdit();
+}
+
+function buildKokkaiOptEdit(){
+  const wrap=document.getElementById('kokkai-opts-edit');wrap.innerHTML='';
+  cfg.kokkaiOpts.forEach((opt,i)=>{
+    const row=document.createElement('div');row.className='opt-row';
+    row.innerHTML=`<input class="opt-inp" id="kopt-${i}" type="text" value="${opt}"><button class="opt-del" onclick="delKokkaiOpt(${i})" title="削除">×</button>`;
+    wrap.appendChild(row);
+  });
+}
+
+function addKokkaiOpt(){cfg.kokkaiOpts.push('新しい選択肢');buildKokkaiOptEdit();}
+function delKokkaiOpt(i){if(cfg.kokkaiOpts.length<=1){alert('選択肢は最低1つ必要です。');return;}cfg.kokkaiOpts.splice(i,1);buildKokkaiOptEdit();}
+function toggleReqBadge(key,checked){const b=document.getElementById('badge-'+key);if(b){b.className=checked?'badge-req':'badge-opt';b.textContent=checked?'必須':'任意';}}
+
+function applyEdits(){
+  cfg.title=document.getElementById('ed-title').value.trim()||cfg.title;
+  cfg.qs.forEach(q=>{
+    const inp=document.getElementById('ed-'+q.key),chk=document.getElementById('req-'+q.key);
+    if(inp&&inp.value.trim())q.label=inp.value.trim();
+    if(chk&&!q.fixed)q.req=chk.checked;
+  });
+  const newOpts=[];
+  cfg.kokkaiOpts.forEach((_,i)=>{const inp=document.getElementById('kopt-'+i);if(inp&&inp.value.trim())newOpts.push(inp.value.trim());});
+  if(newOpts.length>0)cfg.kokkaiOpts=newOpts;
+  applyConfig();buildKokkaiOptEdit();
+  showAdmToast('edit-toast','フォームに反映しました。');
+}
+function resetEdits(){cfg=JSON.parse(JSON.stringify(DEFAULTS));buildEditUI();applyConfig();showAdmToast('edit-toast','初期値に戻しました。');}
+
+function updatePreview(){
+  document.getElementById('prev-title').textContent=cfg.title;
+  const hasReq=cfg.qs.some(q=>q.req);
+  document.getElementById('prev-req-note').textContent=hasReq?'* は必須項目です':'';
+  document.getElementById('prev-questions').innerHTML=cfg.qs.map(q=>{
+    let extra='';
+    if(q.key==='q4'){
+      const allOpts=[...cfg.kokkaiOpts,'その他','なし'];
+      extra=`<div class="prev-opts">${allOpts.map(o=>`<span class="prev-opt">${o}</span>`).join('')}</div>`;
+    } else if(q.key==='q2'){
+      extra=`<div class="prev-note">総支部選択 → 支部一覧 or 合同開催（自由入力）</div>`;
+    } else {
+      extra=`<div class="prev-note">${q.note}</div>`;
+    }
+    return `<div class="prev-sec"><div class="prev-qt">${q.label}${q.req?'<span style="color:#d93025;margin-left:3px">*</span>':''}</div>${extra}</div>`;
+  }).join('');
+}
+
+function updateMembers(){
+  const g=document.getElementById('gikai').value,wrap=document.getElementById('member-wrap'),list=document.getElementById('member-list');
+  list.innerHTML='';
+  if(!g){wrap.classList.add('hidden');return;}
+  const entry=GIKAI_DATA.find(d=>d.g===g);
+  if(!entry){wrap.classList.add('hidden');return;}
+  entry.members.forEach(m=>{
+    const div=document.createElement('label');div.className='member-radio';
+    div.innerHTML=`<input type="radio" name="member" value="${m.n}" onchange="highlightMember(this)"><span class="member-name">${m.n}</span><span class="member-kana">（${m.k}）</span>`;
+    list.appendChild(div);
+  });
+  wrap.classList.remove('hidden');
+}
+function highlightMember(r){document.querySelectorAll('.member-radio').forEach(el=>el.classList.remove('selected'));r.closest('.member-radio').classList.add('selected');}
+function buildDays(){
+  const m=parseInt(document.getElementById('month').value),dayEl=document.getElementById('day');
+  dayEl.innerHTML='<option value="">日</option>';document.getElementById('dow-disp').textContent='';
+  if(!m)return;const yr=(m>=4)?2026:2027,dim=new Date(yr,m,0).getDate();
+  for(let i=1;i<=dim;i++){const o=document.createElement('option');o.value=i;o.textContent=i;dayEl.appendChild(o);}
+}
+function showDow(){
+  const m=parseInt(document.getElementById('month').value),d=parseInt(document.getElementById('day').value);
+  if(!m||!d)return;const yr=(m>=4)?2026:2027;
+  document.getElementById('dow-disp').textContent='曜日：'+DOW[new Date(yr,m-1,d).getDay()]+'曜日';
+}
+function toggleOther(){
+  const v=document.querySelector('input[name=kokkai]:checked')?.value;
+  document.getElementById('other-wrap').classList.toggle('hidden',v!=='その他');
+}
+function getDateStr(){
+  const m=document.getElementById('month').value,d=document.getElementById('day').value;
+  if(!m||!d)return '';const yr=(parseInt(m)>=4)?2026:2027;
+  return m+'/'+d+'（'+DOW[new Date(yr,parseInt(m)-1,parseInt(d)).getDay()]+'）';
+}
+function getKokkai(){
+  const v=document.querySelector('input[name=kokkai]:checked')?.value||'';
+  return v==='その他'?'その他：'+document.getElementById('other-name').value:v;
+}
+function toast(id,msg){const t=document.getElementById(id);t.textContent=msg;t.style.display='block';setTimeout(()=>t.style.display='none',3000);}
+function showAdmToast(id,msg){const t=document.getElementById(id);t.textContent=msg;t.style.display='block';setTimeout(()=>t.style.display='none',3000);}
+
+function validateForm(){
+  const vals={
+    q1:()=>{const g=document.getElementById('gikai').value,m=document.querySelector('input[name=member]:checked')?.value||'';return g&&m;},
+    q2:()=>document.getElementById('soushi').value,
+    q3:()=>getDateStr(),
+    q4:()=>document.querySelector('input[name=kokkai]:checked')?.value,
+    q5:()=>document.getElementById('sonen').value.trim(),
+    q6:()=>document.getElementById('josi').value.trim(),
+    q7:()=>document.getElementById('seinen').value.trim(),
+    q8:()=>document.getElementById('freeText').value.trim()
+  };
+  const errs=[];
+  cfg.qs.forEach(q=>{if(q.req&&vals[q.key]&&!vals[q.key]())errs.push(q.label+'を入力してください');});
+  return errs;
+}
+function submitForm(){
+  const errs=validateForm();if(errs.length){toast('f-toast',errs[0]);return;}
+  const now=new Date(),ts=now.getFullYear()+'/'+(now.getMonth()+1)+'/'+now.getDate()+' '+now.getHours()+':'+String(now.getMinutes()).padStart(2,'0');
+  submissions.push({
+    id:Date.now(),送信日時:ts,
+    議会名:document.getElementById('gikai').value,
+    氏名:document.querySelector('input[name=member]:checked')?.value||'',
+    総支部:document.getElementById('soushi').value,
+    開催単位:getShibuValue(),
+    開催日時:getDateStr(),
+    国会担当:getKokkai(),
+    壮年:document.getElementById('sonen').value,
+    女性:document.getElementById('josi').value,
+    青年:document.getElementById('seinen').value,
+    自由記述:document.getElementById('freeText').value
+  });
+  toast('f-toast','送信しました。ありがとうございました。');setTimeout(resetForm,800);
+}
+function resetForm(){
+  document.getElementById('gikai').value='';document.getElementById('member-list').innerHTML='';document.getElementById('member-wrap').classList.add('hidden');
+  document.getElementById('soushi').value='';document.getElementById('shibu').innerHTML='<option value="">選択してください</option>';
+  document.getElementById('shibu-wrap').classList.add('hidden');document.getElementById('godo-wrap').classList.add('hidden');document.getElementById('godo-text').value='';
+  ['month','day'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('day').innerHTML='<option value="">日</option>';document.getElementById('dow-disp').textContent='';
+  document.querySelectorAll('input[name=kokkai]').forEach(r=>r.checked=false);
+  document.getElementById('other-wrap').classList.add('hidden');document.getElementById('other-name').value='';
+  ['sonen','josi','seinen'].forEach(id=>document.getElementById(id).value='');document.getElementById('freeText').value='';
+}
+function renderAdmin(){renderStats();renderTable();}
+function renderStats(){
+  const t=submissions.length,s=submissions.reduce((a,r)=>a+(parseInt(r.壮年)||0),0),j=submissions.reduce((a,r)=>a+(parseInt(r.女性)||0),0),n=submissions.reduce((a,r)=>a+(parseInt(r.青年)||0),0);
+  document.getElementById('adm-stats').innerHTML=`<div class="sc"><div class="sc-num">${t}</div><div class="sc-lbl">回答件数</div></div><div class="sc"><div class="sc-num">${s}</div><div class="sc-lbl">壮年 合計</div></div><div class="sc"><div class="sc-num">${j}</div><div class="sc-lbl">女性 合計</div></div><div class="sc"><div class="sc-num">${n}</div><div class="sc-lbl">青年 合計</div></div>`;
+}
+function getFiltered(){
+  const fg=document.getElementById('f-gikai')?.value||'',fs=document.getElementById('f-soushi')?.value||'',fk=document.getElementById('f-kokkai')?.value||'';
+  return submissions.filter(r=>{
+    if(fg&&r.議会名!==fg)return false;
+    if(fs&&r.総支部!==fs)return false;
+    if(fk&&!r.国会担当.startsWith(fk))return false;
+    return true;
+  });
+}
+function renderTable(){
+  const rows=getFiltered(),wrap=document.getElementById('tbl-wrap');updateSelCnt();
+  if(!rows.length){wrap.innerHTML='<div class="empty">回答がまだありません</div>';return;}
+  let h=`<div style="overflow-x:auto"><table class="atbl"><thead><tr>
+    <th><input type="checkbox" id="cb-all" onchange="toggleAll(this)" style="accent-color:#7248b9;cursor:pointer"></th>
+    <th>送信日時</th><th>議会名</th><th>氏名</th><th>総支部</th><th>開催単位</th><th>開催日時</th><th>国会担当</th><th>壮年</th><th>女性</th><th>青年</th><th></th>
+  </tr></thead><tbody>`;
+  rows.forEach(r=>{h+=`<tr>
+    <td><input type="checkbox" class="cb-row" data-id="${r.id}" onchange="updateSelCnt()" style="accent-color:#7248b9;cursor:pointer"></td>
+    <td style="white-space:nowrap">${r.送信日時}</td><td>${r.議会名}</td><td style="white-space:nowrap">${r.氏名}</td>
+    <td>${r.総支部}</td><td>${r.開催単位}</td><td style="white-space:nowrap">${r.開催日時}</td><td>${r.国会担当}</td>
+    <td>${r.壮年}</td><td>${r.女性}</td><td>${r.青年}</td>
+    <td><button class="del-btn" onclick="delRow(${r.id})">削除</button></td>
+  </tr>`;});
+  h+=`</tbody></table></div>`;wrap.innerHTML=h;
+}
+function toggleAll(cb){document.querySelectorAll('.cb-row').forEach(c=>c.checked=cb.checked);updateSelCnt();}
+function updateSelCnt(){const n=document.querySelectorAll('.cb-row:checked').length;const el=document.getElementById('sel-cnt');if(el)el.textContent=n?n+'件を選択中':'';}
+function delRow(id){submissions=submissions.filter(r=>r.id!==id);renderAdmin();}
+function buildSheet(rows){
+  const HDR=['送信日時','議会名','氏名','総支部','開催単位','開催日時','国会担当','壮年参加者数','女性参加者数','青年参加者数','自由記述'];
+  const aoa=[HDR,...rows.map(r=>[r.送信日時,r.議会名,r.氏名,r.総支部,r.開催単位,r.開催日時,r.国会担当,r.壮年,r.女性,r.青年,r.自由記述])];
+  const ws=XLSX.utils.aoa_to_sheet(aoa);
+  ws['!cols']=[{wch:18},{wch:14},{wch:12},{wch:10},{wch:18},{wch:12},{wch:14},{wch:10},{wch:8},{wch:8},{wch:40}];
+  const hS={font:{bold:true,color:{rgb:'FFFFFF'}},fill:{fgColor:{rgb:'7248B9'}},alignment:{horizontal:'center'}};
+  HDR.forEach((_,i)=>{const c=XLSX.utils.encode_cell({r:0,c:i});if(ws[c])ws[c].s=hS;});
+  return ws;
+}
+function exportAll(){
+  if(!submissions.length){toast('adm-toast','回答データがありません');return;}
+  const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,buildSheet(submissions),'全件一覧');
+  XLSX.writeFile(wb,'支部会開催報告_全件_'+new Date().toLocaleDateString('ja-JP').replace(/\//g,'')+'.xlsx');
+  toast('adm-toast','全'+submissions.length+'件をExcelに出力しました');
+}
+function exportSelected(){
+  const ids=Array.from(document.querySelectorAll('.cb-row:checked')).map(c=>parseInt(c.dataset.id));
+  if(!ids.length){toast('adm-toast','出力する行をチェックしてください');return;}
+  const rows=submissions.filter(r=>ids.includes(r.id));
+  const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,buildSheet(rows),'選択した回答');
+  XLSX.writeFile(wb,'支部会開催報告_選択'+rows.length+'件_'+new Date().toLocaleDateString('ja-JP').replace(/\//g,'')+'.xlsx');
+  toast('adm-toast',rows.length+'件をExcelに出力しました');
+}
+init();
+</script>
